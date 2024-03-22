@@ -1,6 +1,6 @@
 ﻿# Guillem Gumà
 
-This repository is a practical exercice executed during the 18/03/2024 to 22/03/2024. The repository contains 3 projects:
+This repository is a practical exercice executed during between 18/03/2024 and 22/03/2024. The repository contains 3 projects:
 - Device (.NET Console App)
 - APIREST (.NET Web Service)
 - FrontEnd (React)
