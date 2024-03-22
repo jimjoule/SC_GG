@@ -1,0 +1,133 @@
+body{
+  margin: 0px;
+}
+
+.body-custom{
+  background:linear-gradient(to left, #1B4166, #e0e0e0e0);
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  color:white;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.container{
+  display:flex;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+    width:100%;
+}
+  .form-box{
+    width: 30%;
+    height: 260px;
+    background-color:black;
+    padding:30px;
+    opacity:0.5;
+    border-radius:10px;
+    display:grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 0.5fr 1fr;
+    grid-gap:20px;
+  }
+.body.home{
+  height: 100%;
+}
+
+.message{
+  display:flex;
+  justify-content:space-between
+}
+.social{
+  display:flex;
+  justify-content:space-around;
+  padding:30px;
+}
+
+.social i{
+  font-size:35px;
+}
+
+.social i:hover{
+  color:red;
+  cursor:pointer;
+}
+
+.login-input{
+  width: 100%;
+  margin-bottom: 20px;
+  height: 30px;
+  border-radius: 10px;
+  border: none;
+  accent-color: #3175C6;
+  background-color: #FFFFFF;
+  font-size: 18px;
+}
+
+.btn{
+
+  font-size: 16px;
+  background-color: #3175C6;
+  color: #FFFFFF;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+}
+
+.check{
+  accent-color: #3175C6;
+  width: 20px;
+  height: 20px;
+  
+}
+.txtCheck{    
+  margin: 3px 3px 3px 4px;
+}
+
+#usr{
+  grid-row-start: 1;
+  grid-row-end: 2;
+  height: 100%;
+}
+
+#psw{
+  grid-row-start: 2;
+  grid-row-end: 3;
+  height: 100%;
+}
+
+#btn-remember{
+  grid-row-start: 3;
+  grid-row-end: 4;
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+}
+
+#btn-login{
+  grid-row-start: 4;
+  grid-row-end: 5;
+  height: 100%;
+}
+
+
+.login-input:focus {
+  outline: none !important;
+  border:1px solid 719ECE;
+  box-shadow: 0 0 10px #719ECE;
+}
+
+@media (max-width: 479px) {
+  .form-box{
+    width: 60%;
+    height: 260px;
+    background-color:black;
+    padding:30px;
+    opacity:0.5;
+    border-radius:10px;
+    display:grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1.3fr 1fr;
+    grid-gap:20px;
+  }
+}
