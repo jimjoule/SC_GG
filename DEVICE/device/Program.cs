@@ -22,14 +22,14 @@ if(usr != null)
     Device d1 = new Device("1", usr.Token);
     Device d2 = new Device("2", usr.Token);
     Device d3 = new Device("3", usr.Token);
-    Device mainApp = new Device("4", usr.Token);
+    Device d4 = new Device("4", usr.Token);
 
     //Run Devices in diferent threads
-    Thread thread = new Thread(new ThreadStart(() => {
+    Thread thread1 = new Thread(new ThreadStart(() => {
 
         d1.Start().Wait();
     }));
-    thread.Start();
+    thread1.Start();
 
     Thread thread2 = new Thread(new ThreadStart(() => {
 
@@ -43,9 +43,15 @@ if(usr != null)
     }));
     thread3.Start();
 
+    Thread thread4 = new Thread(new ThreadStart(() => {
+
+        d4.Start().Wait();
+    }));
+    thread4.Start();
+
 
     //Block Main Thread
-    mainApp.Start().Wait();
+    MainProgram main = new MainProgram("0", usr.Token, [thread1, thread2, thread3, thread4 ], [d1, d2, d3, d4]);
 }
 
 //Login Call for API Authentfication

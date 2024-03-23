@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -17,8 +18,9 @@ namespace device
         private HubConnection _hubConnection { get; set; }
 
         private string _device { get; set; } 
+        public EventHandler? _eventInterrupt;
 
-        public async Task ConnectServer(string token, string device)
+        public void Connect(string token, string device)
         {
             try
             {
@@ -26,17 +28,54 @@ namespace device
                 _device = device;
                 _hubConnection = new HubConnectionBuilder()
                     .WithUrl(Config.WebSocket+"/chat?token=" +token+"&device="+device)
+                    .WithAutomaticReconnect()
                     .Build();
 
                 //Start WebSocket Client Connection
-                await _hubConnection.StartAsync();
+                _hubConnection.StartAsync().Wait();
+
+                ////Setup Reciving Messages From Server to Device
+                //_hubConnection.On<int, string>("SendResponse", (Number, Device) =>
+                //{
+                //    if (Device == _device)
+                //    {
+                //        delay = Number;
+                //    }
+
+                //});
+
+            
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        public void Connect_Main(string token, string device)
+        {
+            try
+            {
+                //Setup WebSocket Connection
+                _device = device;
+                _hubConnection = new HubConnectionBuilder()
+                    .WithUrl(Config.WebSocket + "/chat?token=" + token + "&device=" + device)
+                    .WithAutomaticReconnect()
+                    .Build();
+
+                //Start WebSocket Client Connection
+                _hubConnection.StartAsync().Wait();
+
 
                 //Setup Reciving Messages From Server to Device
                 _hubConnection.On<int, string>("SendResponse", (Number, Device) =>
                 {
-                    if(Device == _device) delay = Number;
+                    KeyValuePair<string, int> parameter = new KeyValuePair<string, int>(Device, Number);
+                    _eventInterrupt?.Invoke(parameter, null);
                 });
-            
+
+
+
             }
             catch (Exception ex)
             {

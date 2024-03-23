@@ -1,5 +1,6 @@
 ﻿using device;
 using device.Models;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,8 +21,7 @@ namespace device
             _deviceId = id;
 
             //Coonect to WebSocket
-            Task InitWebSocket = Task.Run(() => _client.ConnectServer(token, _deviceId));
-            InitWebSocket.Wait();
+            _client.Connect(token, _deviceId);
         }
 
         public async Task Start()
@@ -29,21 +29,32 @@ namespace device
             //Inifite Loop
             while (true)
             {
-                //Delay to generate next data
-                Thread.Sleep(_client.delay * 1000);
+                try
+                {
+                    //Delay to generate next data
+                    Thread.Sleep(_client.delay * 1000);
 
-                //Generate Data for device
-                Register reg = Helpers.GenerateData();
-                reg.deviceId = _deviceId;
+                    //Generate Data for device
+                    Register reg = Helpers.GenerateData();
+                    reg.deviceId = _deviceId;
 
-                //Send data to WebSocket
-                _client.SendData(reg);
+                    //Send data to WebSocket
+                    _client.SendData(reg);
 
-                //Log Data into console APP
-                Console.Write(JsonSerializer.Serialize( reg)+"\n");
+                    //Log Data into console APP
+                    Console.Write(JsonSerializer.Serialize(reg) + "\n");
+
+                }
+                catch (ThreadInterruptedException)
+                {
+                }
             }
         }
 
+        public void SetInterval(int interval)
+        {
+            _client.delay = interval;
+        }
         
     }
 
