@@ -18,6 +18,8 @@ builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
 
+//builder.Services.AddHostedService<WorkerService>();
+
 builder.Services.AddAuthentication(cfg => {
     cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;

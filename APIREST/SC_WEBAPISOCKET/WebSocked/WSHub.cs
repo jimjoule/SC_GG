@@ -24,6 +24,9 @@ namespace SC_WEBAPISOCKET.WebSocket
     {
         private readonly static ConnectionMapping<string> _connections =
             new ConnectionMapping<string>();
+
+        private readonly static ConnectionMapping<string> _connectionsDevices =
+    new ConnectionMapping<string>();
         public override async Task OnConnectedAsync()
         {
             try
@@ -38,7 +41,7 @@ namespace SC_WEBAPISOCKET.WebSocket
                 {
                     if(device != null)
                     {
-                        _connections.Add("device", Context.ConnectionId);
+                        _connectionsDevices.Add(device, Context.ConnectionId);
                     }
                     else
                     {
@@ -108,12 +111,38 @@ namespace SC_WEBAPISOCKET.WebSocket
            
         }
 
+        public async Task HeartBeat()
+        {
+            try
+            {
+                foreach (var connectionId in _connections.GetConnections("user"))
+                {
+                    await Clients.Client(connectionId).SendAsync("HeartBeat", _connectionsDevices.GetKeys());
+                }
+
+                //foreach (var connectionId in _connections.GetConnections(user_id_src.ToString()))
+                //{
+                //    await Clients.Client(connectionId).SendAsync("SendResponse", message);
+                //}
+
+                //await Clients.All.SendAsync("broadcastMessage", message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.GetType()); // what is the real exception?
+            }
+            // Call the broadcastMessage method to update clients.
+
+        }
+
         public async Task Freq(int frequency, string device)
         {
             try
             {
 
-                foreach (var connectionId in _connections.GetConnections("device"))
+                
+
+                foreach (var connectionId in _connectionsDevices.GetConnections())
                 {
                     await Clients.Client(connectionId).SendAsync("SendResponse", frequency, device);
                 }
@@ -134,98 +163,6 @@ namespace SC_WEBAPISOCKET.WebSocket
         }
 
 
-        //public async Task GetChat(int user_id_src, int user_id_dst)
-        //{
-        //    try
-        //    {
 
-
-        //        List<MESSAGES> msgs = _context.MESSAGES.Where(m => (m.user_src == user_id_src &&  m.user_dst ==user_id_dst) || (m.user_dst == user_id_src && m.user_src == user_id_dst)).OrderByDescending(u => u.timestamp).Take(30).ToList();
-
-        //        foreach (var connectionId in _connections.GetConnections(user_id_src.ToString()))
-        //        {
-        //            await Clients.Client(connectionId).SendAsync("GetChatResponse", msgs);
-        //        }
-
-        //        //await Clients.All.SendAsync("broadcastMessage", userID, message);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.GetType()); // what is the real exception?
-        //    }
-        //    // Call the broadcastMessage method to update clients.
-
-        //}
-
-        //        public async Task GetUserId()
-        //{
-        //    try
-        //    {
-        //        string usr = Context.GetHttpContext().Request.Query["usercode"];
-        //        USERS reg_user = _context.USERS.Where(m => m.email == usr).OrderByDescending(u => u.id).FirstOrDefault();
-        //        //_connections.Add(reg_user.id.ToString(), Context.ConnectionId);
-
-        //        foreach (var connectionId in _connections.GetConnections(reg_user.id.ToString()))
-        //        {
-        //            await Clients.Client(connectionId).SendAsync("GetUserIdResponse", reg_user.id.ToString());
-        //        }
-
-        //        //await Clients.All.SendAsync("broadcastMessage", userID, message);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.GetType()); // what is the real exception?
-        //    }
-        //    // Call the broadcastMessage method to update clients.
-
-        //}
-
-        //public async Task GetUsers(int user_id_src)
-        //{
-        //    try
-        //    {
-        //        List<USERS> reg_user = _context.USERS.Where(m => m.id != user_id_src).ToList();
-
-        //        //_connections.Add(reg_user.id.ToString(), Context.ConnectionId);
-
-        //        foreach (var connectionId in _connections.GetConnections(user_id_src.ToString()))
-        //        {
-        //            await Clients.Client(connectionId).SendAsync("GetUsersResponse", reg_user);
-        //        }
-
-        //        //await Clients.All.SendAsync("broadcastMessage", userID, message);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.GetType()); // what is the real exception?
-        //    }
-        //    // Call the broadcastMessage method to update clients.
-
-        //}
-
-        //public async Task GetChat(string userID)
-        //{
-        //    try
-        //    {
-        //        string usr = Context.GetHttpContext().Request.Query["usercode"];
-        //        int dst = int.Parse(userID);
-        //        int src = int.Parse(usr);
-
-        //        List<MESSAGES> msgs = _context.MESSAGES.Where(m => (m.user_src == src && m.user_dst == dst) || (m.user_dst == src && m.user_src == dst)).OrderByDescending(u => u.timestamp).Take(30).ToList();
-
-        //        foreach (var connectionId in _connections.GetConnections(usr))
-        //        {
-        //            await Clients.Client(connectionId).SendAsync("GetChatResponse", userID, msgs);
-        //        }
-
-        //        //await Clients.All.SendAsync("broadcastMessage", userID, message);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.GetType()); // what is the real exception?
-        //    }
-        //    // Call the broadcastMessage method to update clients.
-
-        //}
     }
 }

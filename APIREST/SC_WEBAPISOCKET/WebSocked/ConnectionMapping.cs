@@ -45,6 +45,22 @@ namespace SC_WEBAPISOCKET.WebSocket
             return Enumerable.Empty<string>();
         }
 
+        public IEnumerable<string> GetConnections()
+        {
+            IEnumerable<string> connections = new HashSet<string>();
+            foreach(var conn in _connections.Values)
+            {
+                    connections = connections.Concat(conn);
+            }
+
+                return connections;
+        }
+
+        public IEnumerable<T> GetKeys()
+        {
+            return _connections.Keys;
+        }
+
         public void Remove(T key, string connectionId)
         {
             lock (_connections)
