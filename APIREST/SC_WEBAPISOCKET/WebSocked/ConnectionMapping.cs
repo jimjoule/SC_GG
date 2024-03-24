@@ -3,9 +3,18 @@ using System.Linq;
 
 namespace SC_WEBAPISOCKET.WebSocket
 {
+    public static class HubConnections
+    {
+        public readonly static ConnectionMapping<string> Connections =
+    new ConnectionMapping<string>();
+
+        public readonly static ConnectionMapping<string> ConnectionsDevices =
+    new ConnectionMapping<string>();
+    }
+
     public class ConnectionMapping<T>
     {
-        private readonly Dictionary<T, HashSet<string>> _connections =
+        private Dictionary<T, HashSet<string>> _connections =
             new Dictionary<T, HashSet<string>>();
 
         public int Count

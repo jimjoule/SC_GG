@@ -22,11 +22,7 @@ namespace SC_WEBAPISOCKET.WebSocket
 {
     public class WSHub : Hub
     {
-        private readonly static ConnectionMapping<string> _connections =
-            new ConnectionMapping<string>();
 
-        private readonly static ConnectionMapping<string> _connectionsDevices =
-    new ConnectionMapping<string>();
         public override async Task OnConnectedAsync()
         {
             try
@@ -41,11 +37,11 @@ namespace SC_WEBAPISOCKET.WebSocket
                 {
                     if(device != null)
                     {
-                        _connectionsDevices.Add(device, Context.ConnectionId);
+                        HubConnections.ConnectionsDevices.Add(device, Context.ConnectionId);
                     }
                     else
                     {
-                        _connections.Add("user", Context.ConnectionId);
+                        HubConnections.Connections.Add("user", Context.ConnectionId);
                     }
                     
 
@@ -91,7 +87,7 @@ namespace SC_WEBAPISOCKET.WebSocket
                 r.Id = Guid.NewGuid();
                 collection.InsertOne(r.ToBsonDocument());
 
-                foreach (var connectionId in _connections.GetConnections("user"))
+                foreach (var connectionId in HubConnections.Connections.GetConnections("user"))
                 {
                     await Clients.Client(connectionId).SendAsync("SendResponse", message);
                 }
@@ -115,9 +111,12 @@ namespace SC_WEBAPISOCKET.WebSocket
         {
             try
             {
-                foreach (var connectionId in _connections.GetConnections("user"))
+                foreach (var connectionId in HubConnections.Connections.GetConnections("user"))
                 {
-                    await Clients.Client(connectionId).SendAsync("HeartBeat", _connectionsDevices.GetKeys());
+
+                   // var _strongChatHubContext = HttpContextAccessor.HttpContext.RequestServices.GetRequiredService<IHubContext<WSHub>>();
+
+                    //await Clients.Client(connectionId).SendAsync("HeartBeat", _connectionsDevices.GetKeys());
                 }
 
                 //foreach (var connectionId in _connections.GetConnections(user_id_src.ToString()))
@@ -142,7 +141,7 @@ namespace SC_WEBAPISOCKET.WebSocket
 
                 
 
-                foreach (var connectionId in _connectionsDevices.GetConnections())
+                foreach (var connectionId in HubConnections.ConnectionsDevices.GetConnections())
                 {
                     await Clients.Client(connectionId).SendAsync("SendResponse", frequency, device);
                 }

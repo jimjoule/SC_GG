@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.Swagger;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
 
-//builder.Services.AddHostedService<WorkerService>();
+builder.Services.AddHostedService<WorkerService>();
 
 builder.Services.AddAuthentication(cfg => {
     cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -41,6 +42,8 @@ builder.Services.AddAuthentication(cfg => {
 });
 
 builder.Services.AddSwaggerGen();
+
+
 
 var app = builder.Build();
 
