@@ -9,8 +9,8 @@ The main porpouse of the ecosistem is to generate random data from a device and 
 
 ## How to
 To make all the ecosistem run, the process execution should be:
-- Compile and Execute Device project
 - Install dependencies (npm install --force), Compile and Start FrontEnd Project
+- Compile and Execute Device project
 
 ## Notes
 The API Project is running in a Azure Web Service. You can see the Swagger for the API via: https://scapiweboscket.azurewebsites.net/index.html
