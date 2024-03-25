@@ -90,6 +90,24 @@
   grid-template-columns: 1fr;
 }
 
+#c0-little{
+  position: absolute;
+  height: 20%;
+  aspect-ratio: 1;
+  /* width: 40%; */
+  background: #d1d1d1;
+  align-self: center;
+  justify-self: center;
+  border-radius: 50%;
+  border-color: #1B4166;
+  border: solid;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  grid-template-rows:1fr ;
+  grid-template-columns: 1fr;
+}
+
 .RoomTitle{
   font-size: 20px;
   text-decoration-line: underline;
@@ -109,6 +127,7 @@
   justify-self: center;
   height: 20px;
 }
+
 
 .container{
   display:flex;
@@ -199,8 +218,11 @@
 
 
 .ImgTitle{
+  height:30px;
+}
+
+.ImgTitle-little{
   height:40px;
-  margin-top: 10px;
 }
 
 .ImgTemp{

@@ -49,6 +49,40 @@ namespace SC_WEBAPISOCKET.Controllers
             }
         }
 
+        [HttpPost("Devices")]
+        public async Task<IActionResult> GetDevices(USER userRequest)
+        {
+            try
+            {
+                AuthController auth = new AuthController();
+                OkObjectResult res = (OkObjectResult)await auth.ValidateUser(userRequest);
+                if (res.StatusCode == 200)
+                {
+                    var client = new MongoClient(Config.ConnectString);
+
+                    var collection = client.GetDatabase("test").GetCollection<Reg>("registers");
+
+                    LogsReg logsReg = new LogsReg();
+
+                    var filter = Builders<Reg>.Filter.Eq(r => r.deviceId, "1") & Builders<Reg>.Filter.Gt(r => r.timestamp, DateTime.Now.AddMinutes(-10));
+                    logsReg.Device1 = collection.Find<Reg>(filter).SortBy(i => i.timestamp).ToList<Reg>();
+                    var filter2 = Builders<Reg>.Filter.Eq(r => r.deviceId, "2") & Builders<Reg>.Filter.Gt(r => r.timestamp, DateTime.Now.AddMinutes(-10));
+                    logsReg.Device2 = collection.Find<Reg>(filter).SortBy(i => i.timestamp).ToList<Reg>();
+                    var filter3 = Builders<Reg>.Filter.Eq(r => r.deviceId, "3") & Builders<Reg>.Filter.Gt(r => r.timestamp, DateTime.Now.AddMinutes(-10));
+                    logsReg.Device3 = collection.Find<Reg>(filter).SortBy(i=> i.timestamp).ToList<Reg>();
+                    var filter4 = Builders<Reg>.Filter.Eq(r => r.deviceId, "4") & Builders<Reg>.Filter.Gt(r => r.timestamp, DateTime.Now.AddMinutes(-10));
+                    logsReg.Device4 = collection.Find<Reg>(filter).SortBy(i => i.timestamp).ToList<Reg>();
+
+                    return Ok(logsReg);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("Delete")]
         public async Task<IActionResult> DeleteHist(USER userRequest)
         {
