@@ -70,23 +70,19 @@ namespace SC_WEBAPISOCKET.WebSocket
             return _connections.Keys;
         }
 
-        public void Remove(T key, string connectionId)
+        public void Remove(string connectionId)
         {
             lock (_connections)
             {
-                HashSet<string> connections;
-                if (!_connections.TryGetValue(key, out connections))
+                foreach (var conn in _connections)
                 {
-                    return;
-                }
-
-                lock (connections)
-                {
-                    connections.Remove(connectionId);
-
-                    if (connections.Count == 0)
+                    lock (conn.Value)
                     {
-                        _connections.Remove(key);
+                        conn.Value.Remove(connectionId);
+                    }
+                    if(conn.Value.Count < 1)
+                    {
+                        _connections.Remove(conn.Key);
                     }
                 }
             }

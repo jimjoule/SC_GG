@@ -56,14 +56,16 @@ namespace SC_WEBAPISOCKET.WebSocket
             }
 
         }
-        //public override Task OnDisconnected(bool stopCalled)
-        //{
-        //    string name = Context.User.Identity.Name;
 
-        //    _connections.Remove(name, Context.ConnectionId);
 
-        //    return base.OnDisconnected(stopCalled);
-        //}
+
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            HubConnections.Connections.Remove(Context.ConnectionId);
+            HubConnections.ConnectionsDevices.Remove(Context.ConnectionId);
+            await base.OnDisconnectedAsync(exception);
+        }
+
 
         //public override Task OnReconnected()
         //{

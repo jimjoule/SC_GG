@@ -30,7 +30,11 @@ import Connector from './signalr-conn.ts'
     setFreq3,
     freq4,
     setFreq4,
-    send
+    send,
+    stateD1,
+    stateD2,
+    stateD3,
+    stateD4
   }) {
 
     function increment () {
@@ -76,6 +80,10 @@ import Connector from './signalr-conn.ts'
 
     const [tempHome, setTempHome] = useState(0);
     const [lightHome, setLightHome] = useState(0);
+    const [txtD1, setTextD1] = useState('');
+    const [txtD2, setTextD2] = useState('');
+    const [txtD3, setTextD3] = useState('');
+    const [txtD4, setTextD4] = useState('');
 
     function Reload(){
       window.location.reload()
@@ -110,6 +118,41 @@ import Connector from './signalr-conn.ts'
       temp4,
       light4,]);
 
+      useEffect(() => {
+          if(stateD1){
+            document.getElementById("c1").classList.remove('inactive');
+            setTextD1('')
+          }
+          else{
+            document.getElementById("c1").classList.add('inactive');
+            setTextD1('Disconnected')
+          }
+          if(stateD2){
+            document.getElementById("c2").classList.remove('inactive');
+            setTextD2('')
+          }
+          else{
+            document.getElementById("c2").classList.add('inactive');
+            setTextD2('Disconnected')
+          }
+          if(stateD3){
+            document.getElementById("c3").classList.remove('inactive');
+            setTextD3('')
+          }
+          else{
+            document.getElementById("c3").classList.add('inactive');
+            setTextD3('Disconnected')
+          }
+          if(stateD4){
+            document.getElementById("c4").classList.remove('inactive');
+            setTextD4('')
+          }
+          else{
+            document.getElementById("c4").classList.add('inactive');
+            setTextD4('Disconnected')
+          }
+      }, [ stateD1, stateD2, stateD3, stateD4]);
+
       
       return(
         <div className="container-smart">
@@ -143,6 +186,18 @@ import Connector from './signalr-conn.ts'
             <div></div>
             <img className=" ImgSystem ImgTitle" src = {power} onClick={Reload}/>
          </div>
+         <div className="con-1">
+            <div className="D1">{txtD1}</div>
+          </div>
+          <div className="con-2">
+            <div className="D1">{txtD2}</div>
+          </div>
+          <div className="con-3">
+            <div className="D3">{txtD3}</div>
+          </div>
+          <div className="con-4">
+            <div className="D3">{txtD4}</div>
+          </div>
          <div className="btns-1">
             <button className="plus" onClick={increment}>+</button>
             <div className="frequences">{freq1}</div>
@@ -198,14 +253,42 @@ import Connector from './signalr-conn.ts'
           setTemp4(reg.temp)
           setLight4(reg.light)
           break
-    
       }
-  
-  
   }
+  async function ReciveHeartBeat (locationData)  {
+    //const reg= JSON.parse( locationData );
+  console.log(locationData)
+  if(locationData.includes('0')){
+    console.log('0 is running')
+  }
+  if(locationData.includes('1')){
+    setstateD1(true)
+  }
+  else{
+    setstateD1(false)
+  }
+  if(locationData.includes('2')){
+    setstateD2(true)
+  }
+  else{
+    setstateD2(false)
+  }
+  if(locationData.includes('3')){
+    setstateD3(true)
+  }
+  else{
+    setstateD3(false)
+  }
+  if(locationData.includes('4')){
+    setstateD4(true)
+  }
+  else{
+    setstateD4(false)
+  }
+}
 
 
-    const { newMessage, events } = Connector(token, ReciveData);
+    const { newMessage, events } = Connector(token, ReciveData, ReciveHeartBeat);
     const [temp1, setTemp1] = useState('0');
     const [light1, setLight1] = useState('0');
 
@@ -222,6 +305,12 @@ import Connector from './signalr-conn.ts'
     const [freq2, setFreq2] = useState(5);
     const [freq3, setFreq3] = useState(5);
     const [freq4, setFreq4] = useState(5);
+
+    const [stateD1, setstateD1] = useState(false);
+    const [stateD2, setstateD2] = useState('Disconnected');
+    const [stateD3, setstateD3] = useState('Disconnected');
+    const [stateD4, setstateD4] = useState('Disconnected');
+    const [stateD0, setstateD0] = useState('Disconnected');
 
     const WS_URL = "https://scapiweboscket.azurewebsites.net/chat?token="+token;
 
@@ -249,7 +338,12 @@ function Send(device, number){
       setFreq3={setFreq3}
       freq4={freq4}
       setFreq4={setFreq4}
-      send={Send}>
+      send={Send}
+      stateD1={stateD1}
+      stateD2={stateD2}
+      stateD3={stateD3}
+      stateD4={stateD4}
+      >
     </SmartHomeView>
 
     );
