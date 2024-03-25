@@ -20,7 +20,7 @@ namespace device
             d2 += rand.Next(60);
 
             //Create Object Data
-            Register reg = new Register() { temp = d.ToString("#0.0"), light = d2.ToString("#0.0"), timestamp = DateTime.Now };
+            Register reg = new Register() { temp = d, light = d2, timestamp = DateTime.Now };
 
             return reg;
         }

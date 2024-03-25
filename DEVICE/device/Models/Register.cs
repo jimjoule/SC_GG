@@ -8,8 +8,8 @@ namespace device.Models
 {
     public class Register
     {
-        public string temp { get; set; }
-        public string light { get; set; }
+        public float temp { get; set; }
+        public float light { get; set; }
         public DateTime timestamp { get; set; }
         public string deviceId { get; set; }
 

@@ -7,6 +7,7 @@ import power from './img/power.svg'
 import ajust from './img/ajust.svg'
 import * as signalR from '@microsoft/signalr';
 import Connector from './signalr-conn.ts'
+import {TrackHome} from './TrackHome.js'
 
 
 
@@ -92,23 +93,23 @@ import Connector from './signalr-conn.ts'
     async function Logs({
     }
     ) {
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Accept':'*/*', 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({Token: token })
-      };
-      const response = await fetch('https://scapiweboscket.azurewebsites.net/logs/get', requestOptions)
-      const data = await response.json();
-      var str = JSON.stringify(data, null, 2); // spacing level = 2
-      const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(<div>{str}</div>);
-    
+      // const requestOptions = {
+      //   method: 'POST',
+      //   headers: { 'Accept':'*/*', 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      //   body: JSON.stringify({Token: token })
+      // };
+      // const response = await fetch('https://scapiweboscket.azurewebsites.net/logs/get', requestOptions)
+      // const data = await response.json();
+      // var str = JSON.stringify(data, null, 2); // spacing level = 2
+       const root = ReactDOM.createRoot(document.getElementById("root"));
+      // root.render(<div>{str}</div>);
+      root.render(<TrackHome token={token}></TrackHome>);
     
     }
 
     useEffect(() => {
-      setLightHome((parseFloat(light1)+parseFloat(light2)+parseFloat(light3)+parseFloat(light4))/4)
-      setTempHome((parseFloat(temp1)+parseFloat(temp1)+parseFloat(temp1)+parseFloat(temp4))/4)
+      setLightHome(((parseFloat(light1)+parseFloat(light2)+parseFloat(light3)+parseFloat(light4))/4).toFixed(1))
+      setTempHome(((parseFloat(temp1)+parseFloat(temp2)+parseFloat(temp3)+parseFloat(temp4))/4).toFixed(1))
     }, [ temp1,
       light1,
       temp2,
@@ -238,20 +239,20 @@ import Connector from './signalr-conn.ts'
     console.log(reg)
       switch(reg.deviceId){
         case '1':
-          setTemp1(reg.temp)
-          setLight1(reg.light)
+          setTemp1(reg.temp.toFixed(1))
+          setLight1(reg.light.toFixed(1))
           break
         case '2':
-          setTemp2(reg.temp)
-          setLight2(reg.light)
+          setTemp2(reg.temp.toFixed(1))
+          setLight2(reg.light.toFixed(1))
           break 
         case '3':
-          setTemp3(reg.temp)
-          setLight3(reg.light)
+          setTemp3(reg.temp.toFixed(1))
+          setLight3(reg.light.toFixed(1))
           break
         case '4':
-          setTemp4(reg.temp)
-          setLight4(reg.light)
+          setTemp4(reg.temp.toFixed(1))
+          setLight4(reg.light.toFixed(1))
           break
       }
   }
@@ -259,58 +260,64 @@ import Connector from './signalr-conn.ts'
     //const reg= JSON.parse( locationData );
   console.log(locationData)
   if(locationData.includes('0')){
-    console.log('0 is running')
-  }
-  if(locationData.includes('1')){
-    setstateD1(true)
+    if(locationData.includes('1')){
+      setstateD1(true)
+    }
+    else{
+      setstateD1(false)
+    }
+    if(locationData.includes('2')){
+      setstateD2(true)
+    }
+    else{
+      setstateD2(false)
+    }
+    if(locationData.includes('3')){
+      setstateD3(true)
+    }
+    else{
+      setstateD3(false)
+    }
+    if(locationData.includes('4')){
+      setstateD4(true)
+    }
+    else{
+      setstateD4(false)
+    }
   }
   else{
     setstateD1(false)
-  }
-  if(locationData.includes('2')){
-    setstateD2(true)
-  }
-  else{
     setstateD2(false)
-  }
-  if(locationData.includes('3')){
-    setstateD3(true)
-  }
-  else{
     setstateD3(false)
-  }
-  if(locationData.includes('4')){
-    setstateD4(true)
-  }
-  else{
     setstateD4(false)
   }
+  
 }
 
 
     const { newMessage, events } = Connector(token, ReciveData, ReciveHeartBeat);
-    const [temp1, setTemp1] = useState('0');
-    const [light1, setLight1] = useState('0');
+    const [temp1, setTemp1] = useState(0);
+    const [light1, setLight1] = useState(0);
 
-    const [temp2, setTemp2] = useState('0');
-    const [light2, setLight2] = useState('0');
+    const [temp2, setTemp2] = useState(0);
+    const [light2, setLight2] = useState(0);
 
-    const [temp3, setTemp3] = useState('0');
-    const [light3, setLight3] = useState('0');
+    const [temp3, setTemp3] = useState(0);
+    const [light3, setLight3] = useState(0);
 
-    const [temp4, setTemp4] = useState('0');
-    const [light4, setLight4] = useState('0');
+    const [temp4, setTemp4] = useState(0);
+    const [light4, setLight4] = useState(0);
 
     const [freq1, setFreq1] = useState(5);
     const [freq2, setFreq2] = useState(5);
     const [freq3, setFreq3] = useState(5);
     const [freq4, setFreq4] = useState(5);
 
-    const [stateD1, setstateD1] = useState(false);
-    const [stateD2, setstateD2] = useState('Disconnected');
-    const [stateD3, setstateD3] = useState('Disconnected');
-    const [stateD4, setstateD4] = useState('Disconnected');
-    const [stateD0, setstateD0] = useState('Disconnected');
+    const [stateD1, setstateD1] = useState(true);
+    const [stateD2, setstateD2] = useState(true);
+    const [stateD3, setstateD3] = useState(true);
+    const [stateD4, setstateD4] = useState(true);
+    const [stateD0, setstateD0] = useState(true);
 
     const WS_URL = "https://scapiweboscket.azurewebsites.net/chat?token="+token;
 
